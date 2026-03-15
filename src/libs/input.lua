@@ -3,13 +3,15 @@
 -- This file contains the Love2D input event hooks. All hooks should do is call
 -- methods on the @{TimerTable} instance, which starts the mod's input pipeline.
 
--- old event hooks used for fallback
-local mousepressed_fb = love.mousepressed;
-local mousereleased_fb = love.mousereleased;
-local gamepadpressed_fb = love.gamepadpressed;
-local gamepadreleased_fb = love.gamepadreleased;
-local keypressed_fb = love.keypressed;
-local keyreleased_fb = love.keyreleased;
+-- old event hooks used for fallback; stored globally so timers.lua can forward inputs
+INPUT_FALLBACKS = {
+    mousepressed = love.mousepressed,
+    mousereleased = love.mousereleased,
+    gamepadpressed = love.gamepadpressed,
+    gamepadreleased = love.gamepadreleased,
+    keypressed = love.keypressed,
+    keyreleased = love.keyreleased,
+};
 
 --- Mouse press event hook.
 -- Love2D mouse button press event override.
@@ -26,9 +28,9 @@ function love.mousepressed(x, y, button, istouch)
         and not G.CONTROLLER.locks.frame
         and not G.SETTINGS.PAUSED
     then
-        STATE.timers:start('mouse'..button);
+        STATE.timers:start('mouse'..button, { type = 'mouse', x = x, y = y, button = button, istouch = istouch });
     else
-        mousepressed_fb(x, y, button, istouch);
+        INPUT_FALLBACKS.mousepressed(x, y, button, istouch);
     end
 end
 
@@ -49,7 +51,7 @@ function love.mousereleased(x, y, button, istouch)
     then
         STATE.timers:stop('mouse'..button);
     else
-        mousereleased_fb(x, y, button, istouch);
+        INPUT_FALLBACKS.mousereleased(x, y, button, istouch);
     end
 end
 
@@ -93,15 +95,15 @@ function love.gamepadpressed(joystick, button)
         and not G.CONTROLLER.locks.frame
         and not G.SETTINGS.PAUSED
     then
-        STATE.timers:start(button);
+        STATE.timers:start(button, { type = 'gamepad', joystick = joystick });
     else
         if
-            key == 'start' and
+            button == 'start' and
             STATE.listening
         then
             return;
         end
-        gamepadpressed_fb(joystick, button);
+        INPUT_FALLBACKS.gamepadpressed(joystick, button);
     end
 end
 
@@ -120,13 +122,13 @@ function love.gamepadreleased(joystick, button)
         STATE.timers:stop(button);
     else
         if
-            key == 'start' and
+            button == 'start' and
             STATE.listening
         then
             stop_listening()
             return;
         end
-        gamepadreleased_fb(joystick, button);
+        INPUT_FALLBACKS.gamepadreleased(joystick, button);
     end
 end
 
@@ -142,7 +144,7 @@ function love.keypressed(key)
         and not G.CONTROLLER.locks.frame
         and not G.SETTINGS.PAUSED
     then
-        STATE.timers:start(key);
+        STATE.timers:start(key, { type = 'keyboard' });
     else
         if
             key == 'escape' and
@@ -150,7 +152,7 @@ function love.keypressed(key)
         then
             return;
         end
-        keypressed_fb(key);
+        INPUT_FALLBACKS.keypressed(key);
     end
 end
 
@@ -176,7 +178,7 @@ function love.keyreleased(key)
             stop_listening()
             return;
         end
-        keyreleased_fb(key);
+        INPUT_FALLBACKS.keyreleased(key);
     end
 end
 
