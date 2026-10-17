@@ -148,6 +148,7 @@ local old_update = G.CONTROLLER.update;
 function G.CONTROLLER:update(dt)
     old_update(self, dt);
     STATE.timers:increment(dt);
+    if hold_b_tick then hold_b_tick(self); end
     if STATE.multiselecting ~= nil then
         multiselect_hold();
     end
