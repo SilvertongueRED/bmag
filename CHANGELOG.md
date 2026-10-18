@@ -5,11 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [v2.0.8] - 2026-10-17
 
 ### Added
 
 - **Hold B to close all menus** (gamepad): holding B for about 0.7 seconds closes every open menu at once. A quick tap of B still just goes back one menu.
+- LT/RT trigger support for menu page navigation.
+
+### Fixed
+
+- Hold-only gamepad bindings no longer swallow short presses; fixed `key`/button mix-ups in the bindings.
+- Config changes persist.
+
+### Changed
+
+- Merged upstream v2.0.6 (Steamodded dependency fix).
 
 ## [v2.0.6] - 2026-05-30
 
