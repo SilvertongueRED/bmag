@@ -9,9 +9,9 @@
 	"priority": "-10000",
 	"badge_colour": "8651B8",
 	"badge_text_colour": "DEC9F2",
-	"version": "2.0.7",
+	"version": "2.0.6",
 	"dependencies": [
-        "Steamodded (>=1.*~)",
+        "Steamodded (*)",
         "Lovely (>=0.6)",
         "Balatro (>=1.0.1m)"
     ]
